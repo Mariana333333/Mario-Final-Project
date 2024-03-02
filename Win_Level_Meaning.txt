@@ -1,0 +1,8 @@
+D = Flag Down
+U = Flag Up
+M = Switch
+R = Switch on
+P = Spring Down
+s = Spring up
+C = Rope
+W = Weight

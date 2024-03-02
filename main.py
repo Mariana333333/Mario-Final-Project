@@ -12,11 +12,13 @@ sprites = sprite.Group()
 
 class GameSprite(sprite.Sprite):
     def __init__(self, sprite_img, x, y, width, height):
+        super().__init__()
         self.image = transform.scale(image.load(sprite_img), (width, height))
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
         sprites.add(self)
+
 
     def draw(self):
         window.blit(self.image, self.rect)
@@ -72,17 +74,42 @@ player = Player('assets/p1_stand.png', 40, 350, 30, 30)
 walls = []
 enemys = []
 coins = []
+SIZE = 35
 
-with open('map.txt', 'r') as file:
+with open('Level_1.txt', 'r') as file:
     x, y = 0, 0
     map = file.readlines()
     for line in map:
         for symbol in line:
             if symbol == 'G':
-                GameSprite('assets/grass.png', x, y, 30, 30)
+                GameSprite('assets/grass.png', x, y, SIZE, SIZE)
 
-            x += 35
-        y += 35
+            if symbol == 'L':
+                GameSprite('assets/liquidlavaTop.png', x, y, SIZE, SIZE)
+
+            if symbol == 'S':
+                GameSprite('assets/spikes.png', x, y, SIZE, SIZE)
+
+            if symbol == 'C':
+                GameSprite('assets/coinGold.png', x, y, SIZE, SIZE)
+
+            if symbol == 'O':
+                GameSprite('assets/boxCoin.png', x, y, SIZE, SIZE)
+
+            if symbol == 'E':
+                GameSprite('assets/snailShell.png', x, y, SIZE, SIZE)
+
+            if symbol == 'W':
+                GameSprite('assets/exit.png', x, y, SIZE, SIZE)
+
+            if symbol == 'Z':
+                GameSprite('assets/star.png', x, y, SIZE, SIZE)
+
+            if symbol == 'M':
+                GameSprite('assets/mushroomRed.png', x, y, SIZE, SIZE)
+
+            x += SIZE
+        y += SIZE
         x = 0
 
 run = True
