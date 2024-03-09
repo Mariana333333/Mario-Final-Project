@@ -25,24 +25,44 @@ class GameSprite(sprite.Sprite):
 
 
 class Player(GameSprite):
+    def __init__(self, sprite_img, x, y, width, height):
+        super().__init__(sprite_img, x, y, width, height)
+        self.ground = False
+        self.speed_y = 0
+        self.jump_speed = 15
+        self.gravity = 1
     def update(self):
         pressed = key.get_pressed()
         old_pos = self.rect.x, self.rect.y
-        if pressed[K_w] and self.rect.y > 0:
-            self.rect.y -= 3
+        if pressed[K_w] and self.ground:
+            self.speed_y = -self.jump_speed
+            self.rect.y += self.speed_y
+            self.ground = False
 
-        if pressed[K_s] and self.rect.y < HEIGHT - 70:
-            self.rect.y += 3
+        # if pressed[K_s] and self.rect.y < HEIGHT - 70:
+        #     self.rect.y = -self.jump_speed
+        #     self.ground = False
 
         if pressed[K_a] and self.rect.x > 0:
             self.rect.x -= 3
 
         if pressed[K_d] and self.rect.x < WIDTH - 70:
             self.rect.x += 3
+        if not self.ground:
+            self.speed_y += self.gravity
+
+            self.rect.y += self.speed_y
 
         for w in walls:
             if sprite.collide_rect(player, w):
-                self.rect.x, self.rect.y = old_pos
+                if self.speed_y > 0 and self.rect.bottom >= w.rect.top:
+                    self.rect.bottom = w.rect.top
+                    self.speed_y = 0
+                    self.ground = True
+            else:
+                self.ground = False
+
+
 
 
 class Enemy(GameSprite):
@@ -82,7 +102,7 @@ with open('Level_1.txt', 'r') as file:
     for line in map:
         for symbol in line:
             if symbol == 'G':
-                GameSprite('assets/grass.png', x, y, SIZE, SIZE)
+                walls.append(GameSprite('assets/grass.png', x, y, SIZE, SIZE))
 
             if symbol == 'L':
                 GameSprite('assets/liquidlavaTop.png', x, y, SIZE, SIZE)
