@@ -1,0 +1,12 @@
+G = Grass blocks
+L = Lava
+S = Spikes
+C = Coin
+O = COin block
+B = Empty space/ Bg
+E = Enemy
+S = Clouds
+W = Window
+Z = Star
+F = Flag
+M = mushroom

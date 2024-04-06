@@ -1,10 +1,18 @@
+import self
 from pygame import *
+import sys
 
 mixer.init()
 FPS = 60
 WIDTH, HEIGHT = 700, 525
 window = display.set_mode((WIDTH, HEIGHT))
 count = 0
+
+font.init()
+font1 = font.SysFont('Impact', 70)
+result = font1.render('YOU LOSE' , True, (140, 100, 30))
+font2 = font.SysFont('Impact', 70)
+result1 = font2.render('YOU WIN', True , (0, 255, 0))
 
 
 display.set_caption('Маріо')
@@ -69,6 +77,8 @@ class Player(GameSprite):
             self.ground = False
 
 
+
+
 class Enemy(GameSprite):
     def __init__(self, x, y, sprite_img='assets/snailShell.png', speed=2):
         super().__init__(sprite_img, x, y, 30, 30)
@@ -98,8 +108,12 @@ player = Player('assets/p1_stand.png', 40, 350, 30, 30)
 walls = []
 enemys = []
 coins = []
+spikes = []
+lava = []
 SIZE = 35
 level = 1
+
+
 
 
 def load_level(level=1):
@@ -142,10 +156,13 @@ def load_level(level=1):
                 if symbol == 'P':
                     player.rect.x = x
                     player.rect.y = y
+
+
+
+
                 x += SIZE
             y += SIZE
             x = 0
-
 
 run = True
 finish = False
@@ -161,12 +178,26 @@ while run:
     for e in event.get():
         if e.type == QUIT:
             run = False
+            sys.exit()
+
+
 
     if not finish:
         player.update()
         if player.rect.x >= WIDTH:
             level += 1
-            load_level(level)
+            if level >= 6:
+                finish = True
+                result = result1
+            else:
+
+                load_level(level)
+
+
+        if player.rect.y >= HEIGHT:
+            print(font1)
+            finish = True
+
 
         window.blit(bg, (0, 0))
         player.draw()
@@ -178,6 +209,30 @@ while run:
                 count += 1
                 coins.remove(c)
                 c.kill()
+
+        for e in enemys:
+            e.draw()
+            if sprite.collide_rect(player, e):
+                print(font1)
+                enemys.remove(e)
+                e.kill()
+                finish = True
+
+        for s in spikes:
+            s.draw()
+            if sprite.collide_rect(player,s) :
+                print(font1)
+                s.kill()
+                finish = True
+
+            for l in lava:
+                l.draw()
+            if sprite.collide_rect(player,l):
+                print(font1)
+            l.kill()
+            finish = True
+
+
 
 
     else:
